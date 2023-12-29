@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ToDo List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1eaea;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .box {
+    width: 500px;
+    min-height: 400px;
+    background-color: rgb(231, 183, 148);
+    border-radius: 5px;
+    padding: 15px;
+}
+
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    form {
+      display: flex;
+      margin-bottom: 30px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid black;
+      border-radius: 4px;
+      margin-right: 20px;
+    }
+
+    button {
+      padding: 10px;
+      background-color: #4caf50;
+      color: #fff;
+      border:1px solid black;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #21da2a;
+    }
+
+    #taskList {
+      list-style-type: none;
+      padding: 0;
+      width: 100%;
+    }
+
+    li {
+      display: flex;
+      align-items: center;
+      background-color: #fff;
+      margin: 10px 0;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    input[type="checkbox"] {
+      margin-right: 10px;
+    }
+
+    .completed {
+      text-decoration: line-through;
+    }
+
+    #filterButtons {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+
+    #filterButtons button {
+      padding: 8px 25px ;
+      background-color: #7cd8bd;
+      border: black solid;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    #filterButtons button:hover {
+      background-color: #ccc;
+    }
+
+    @media (max-width: 600px) {
+      li { 
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        margin-right: 0;
+      }
+
+      #filterButtons {
+        flex-direction: column;
+      }
+
+      #filterButtons button {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>ToDo List</h1>
+
+    <form id="taskForm">
+      <input type="text" id="taskInput" placeholder="Add a new task..." required>
+      <button type="submit">Add Task</button>
+    </form>
+  
+    <ul id="taskList"></ul>
+  
+    <div id="filterButtons">
+      <button onclick="filterTasks('all')">All</button>
+      <button onclick="filterTasks('active')">Active</button>
+      <button onclick="filterTasks('completed')">Completed</button>
+      <button onclick="clearCompleted()">Clear Completed</button>
+    </div>
+  </div>
+
+
+
+  <script>
+    const taskForm = document.getElementById('taskForm');
+    const taskInput = document.getElementById('taskInput');
+    const taskList = document.getElementById('taskList');
+
+    taskForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      addTask(taskInput.value);
+      taskInput.value = '';
+
+
+    });
+
+    function addTask(taskText) {
+      const li = document.createElement('li');
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+
+      const taskLabel = document.createElement('label');
+      taskLabel.textContent = taskText;
+
+      li.appendChild(checkbox);
+      li.appendChild(taskLabel);
+      taskList.appendChild(li);
+
+      checkbox.addEventListener('change', function () {
+        li.classList.toggle('completed', checkbox.checked);
+      });
+    }
+
+    function filterTasks(filterType) {
+      const lis = taskList.getElementsByTagName('li');
+
+      for (const li of lis) {
+        switch (filterType) {
+          case 'all':
+            li.style.display = 'flex';
+            break;
+          case 'active':
+            li.style.display = li.classList.contains('completed') ? 'none' : 'flex';
+            break;
+          case 'completed':
+            li.style.display = li.classList.contains('completed') ? 'flex' : 'none';
+            break;
+        }
+      }
+    }
+
+    function clearCompleted() {
+      const completedLis = taskList.querySelectorAll('.completed');
+      completedLis.forEach(li => li.remove());
+    }
+  </script>
+
+</body>
+</html>
